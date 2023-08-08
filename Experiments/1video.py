@@ -3,11 +3,21 @@
 
 import cv2
 import numpy as np
-        
-img = cv2.imread('1.png')
-#获取源图像宽和高
-w = img.shape[0]
-h = img.shape[1]
+import sys
+choosen_video = 'input_video.mp4'
+if len(sys.argv) > 1:
+    choosen_video = sys.argv[1]
+# Begin tracking
+cap = cv2.VideoCapture(choosen_video)
+width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
+height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
+fps = cap.get(cv2.CAP_PROP_FPS)
+print('%s (%dx%d@%d)' % (choosen_video, width, height, fps))
+
+ret, img = cap.read()
+if not ret:
+    print('unable to open file ', choosen_video)
+    exit()
 
 Recpoints = []  #空列表用于储存原始图像四点坐标
 selname = 'please select 4 point of rect'
@@ -33,12 +43,18 @@ while(len(Recpoints) < 4):
         break
     elif key == 110:
         Recpoints = []
+        ret, img = cap.read()
 
 if len(Recpoints) < 4:
     print('must mark 4 point to continue')
     exit(0)
-realw = 320
-realh = 180
+
+#转换后得到矩形的坐标点
+realw = 153
+realh = 273
+scale = min(width / realw, height / realh)
+realw = int(realw * scale)
+realh = int(realh * scale)
 #源图像中四边形坐标点（获取坐标点方法可参照我上篇博文）
 point1 = np.array(Recpoints, dtype = "float32")
 #转换后得到矩形的坐标点
@@ -47,8 +63,6 @@ print('point1', point2)
 print('point2', point2)
 M = cv2.getPerspectiveTransform(point1,point2)
 print('M', M)
-out_img = cv2.warpPerspective(img,M,(realw,realh))
-cv2.imshow("img", out_img)
 
 def getMapPos(point):
     # 坐标映射矩阵
@@ -61,5 +75,15 @@ print("now check getMapPos with point1")
 for pt in point1:
     print(pt, '=', getMapPos(pt))
 
-cv2.waitKey(0)
+while 1:
+    ret, img = cap.read()
+    if not ret:
+        break
+    cv2.imshow('img', img)
+    out_img = cv2.warpPerspective(img,M,(realw,realh))
+    cv2.imshow('trans', out_img)
+    k = cv2.waitKey(30)
+    if k == ord('q'):
+        break
+
 cv2.destroyAllWindows()

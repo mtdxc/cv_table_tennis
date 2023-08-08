@@ -7,7 +7,7 @@ from numpy.polynomial import polynomial as pol
 L=275
 W=152.5
 NH=11
-
+print('%.1fx%.1f NH=%d'%(L, W, NH))
 # 直接将物理坐标映射到乒乓球桌上，将世界坐标原点设置O点，即乒乓球桌一边的中点
 # O=[0,0,0]
 A=[W/2,0,0]
@@ -43,6 +43,19 @@ print('\n-----calibration-------')
 # pairs of corresponding points, a least 5 points
 points2D=np.array([a,b,m2_l,m2_u,c,d,m1_l,m1_u])
 points3D=np.array([A,B,M2_L,M2_U,C,D,M1_L,M1_U])
+    
+# 做透视变化
+point1 = np.array([a, b, c, d],dtype = "float32")
+point2 = np.array([A[:2], B[:2], C[:2], D[:2]], dtype = "float32")
+print(point1, point2)
+M = cv2.getPerspectiveTransform(point1, point2)
+print('M', M)
+def PointTo2d(pt):
+    # 坐标映射矩阵
+    pt = np.array((pt[0], pt[1], 1))
+    pt2 = np.dot(M, pt)
+    pt2 /= pt2[2]
+    return pt2[0], pt2[1]
 
 # calc projection投射 matrix 
 def calibration(points2D, points3D):
@@ -74,7 +87,7 @@ def calibration(points2D, points3D):
 
 # 3x4 array
 P = calibration(points2D, points3D)
-print(P)
+print('P', P)
 
 # maps 3D pts to 2D
 def Map3DTo2d(x, y, z):
@@ -85,8 +98,10 @@ def Map3DTo2d(x, y, z):
     return int(pt2d[0]), int(pt2d[1])
 
 # verif that P correctly maps 3D pts to 2D : verification some key table points
-print("middle point is", Map3DTo2d(0, L/2, 0))
-
+print("middle point in image is", Map3DTo2d(0, L/2, 0))
+# 错误的, 只有在z为0时, 此次映射变化才生效
+print("middle point in table is", PointTo2d(m1_u))
+print("middle point in table is", PointTo2d(m1_l))
 print('\n-----factorize-------')
 import scipy
 import scipy.linalg as linalg
