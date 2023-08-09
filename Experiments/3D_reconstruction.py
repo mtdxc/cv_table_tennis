@@ -127,7 +127,7 @@ def factorize(P):
     return (K,R,C)
 
     
-K,R,C = factorize(P)
+K,R,T = factorize(P)
 
 print('Intrinsic parameters matrix K')
 print(K.round(2),'\n')
@@ -136,11 +136,20 @@ print('Extrinsic rotation matrix R')
 print(R.round(2),'\n')
 
 print('Camera center position in RW C')
-print(C.round(2),'\n')
+print(T.round(2),'\n')
 
 
 print('\n-----load data-------')
 draw_trajectory = cv2.imread('seq.jpg')
+# 储存棋盘格角点的世界坐标和图像坐标对
+# 写坐标时要保证Z为0，按照X先变化，后Y变化，从小到大顺序写
+imgpoints = [np.array([b,a,m2_l,m1_l,c,d], dtype=np.float32)] # 在图像平面的二维点
+objpoints = [np.array([B,A,M2_L,M1_L,C,D], dtype=np.float32)] # 在世界坐标系中的三维点
+print('objpoints', objpoints)
+# opencv报点数不够，这边给6个点，至少要求 15/2 = 8 个点
+# ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, draw_trajectory.shape[:2], None, None)
+# print(ret, mtx, dist, rvecs, tvecs)
+
 # 从tracker.py中读取抛物线点
 ball_frame_positions = []
 timestamps = []
