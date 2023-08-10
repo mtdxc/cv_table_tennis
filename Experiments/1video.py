@@ -19,8 +19,9 @@ if not ret:
     print('unable to open file ', choosen_video)
     exit()
 
+nPoint = 4
 Recpoints = []  #空列表用于储存原始图像四点坐标
-selname = 'please select 4 point of rect'
+selname = 'please select %d point of rect' % nPoint
 def draw_circle(event,x,y,flags,param):
     global Recpoints
     frame = img
@@ -33,7 +34,7 @@ def draw_circle(event,x,y,flags,param):
 cv2.namedWindow(selname,cv2.WINDOW_NORMAL)
 cv2.setMouseCallback(selname, draw_circle)
 
-while(len(Recpoints) < 4):
+while(len(Recpoints) < nPoint):
     for (x, y) in Recpoints:
         cv2.circle(img, (x, y), 10, (0, 255, 0), -1)
     cv2.imshow(selname, img)
@@ -56,7 +57,7 @@ scale = min(width / realw, height / realh)
 realw = int(realw * scale)
 realh = int(realh * scale)
 #源图像中四边形坐标点（获取坐标点方法可参照我上篇博文）
-point1 = np.array(Recpoints, dtype = "float32")
+point1 = np.array(Recpoints[:4], dtype = "float32")
 #转换后得到矩形的坐标点
 point2 = np.array([[0,0],[realw,0],[0,realh],[realw,realh]],dtype = "float32")
 print('point1', point2)

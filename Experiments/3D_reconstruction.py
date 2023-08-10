@@ -142,7 +142,7 @@ print(T.round(2),'\n')
 print('\n-----load data-------')
 draw_trajectory = cv2.imread('seq.jpg')
 # 储存棋盘格角点的世界坐标和图像坐标对
-# 写坐标时要保证Z为0，按照X先变化，后Y变化，从小到大顺序写
+# 写坐标时要保证Z为0
 imgpoints = [np.array([b,a,m2_l,m1_l,c,d], dtype=np.float32)] # 在图像平面的二维点
 objpoints = [np.array([B,A,M2_L,M1_L,C,D], dtype=np.float32)] # 在世界坐标系中的三维点
 print('objpoints', objpoints)
