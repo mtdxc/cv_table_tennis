@@ -36,7 +36,6 @@ a,b,m2_l,m2_u,c,d,m1_l,m1_u=([1267, 1030],
 dim_img=cv2.imread('real_dim_and_cd.jpg')
 cv2.imshow('table', dim_img)
 cv2.waitKey(0)
-
 print('\n-----calibration-------')
 # solving system to find camera proj matrix P using DLT : needs at least 6 points given P is 3*4
 
@@ -58,6 +57,7 @@ def PointTo2d(pt):
     return pt2[0], pt2[1]
 
 # calc projection投射 matrix 
+# cv2.findHomography
 def calibration(points2D, points3D):
     # constructing DLT matrix 
     M=[]
@@ -141,6 +141,7 @@ print(T.round(2),'\n')
 
 print('\n-----load data-------')
 draw_trajectory = cv2.imread('seq.jpg')
+print(draw_trajectory.shape)
 # 储存棋盘格角点的世界坐标和图像坐标对
 # 写坐标时要保证Z为0
 imgpoints = [np.array([b,a,m2_l,m1_l,c,d], dtype=np.float32)] # 在图像平面的二维点
