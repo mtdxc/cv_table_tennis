@@ -28,7 +28,7 @@ def draw_circle(event,x,y,flags,param):
     if event==cv2.EVENT_LBUTTONDBLCLK:
         Recpoints.append([x,y])
         print(x,y)
-        cv2.circle(frame, (x, y), 10, (0, 255, 0), -1)
+        cv2.circle(frame, (x, y), 4, (0, 255, 0), -1)
         cv2.imshow(selname, frame)
 
 cv2.namedWindow(selname,cv2.WINDOW_NORMAL)
@@ -36,7 +36,7 @@ cv2.setMouseCallback(selname, draw_circle)
 
 while(len(Recpoints) < nPoint):
     for (x, y) in Recpoints:
-        cv2.circle(img, (x, y), 10, (0, 255, 0), -1)
+        cv2.circle(img, (x, y), 4, (0, 255, 0), -1)
     cv2.imshow(selname, img)
     key = cv2.waitKey() & 0xFF
     print(key)
@@ -84,7 +84,7 @@ while 1:
     out_img = cv2.warpPerspective(img,M,(realw,realh))
     cv2.imshow('trans', out_img)
     k = cv2.waitKey(30)
-    if k == ord('q'):
+    if k == ord('q') or k == 27:
         break
 
 cv2.destroyAllWindows()
