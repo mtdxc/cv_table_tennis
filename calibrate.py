@@ -3,6 +3,7 @@ import cv2
 
 # termination criteria
 criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
+flag = cv2.CALIB_FIX_K3
 # 结论：
 # 棋盘格必须最少3x3, 但此时返回的dist误差较大
 # 棋盘数只需要1个就能calibrateCamera
@@ -57,7 +58,7 @@ frameNo = 0
 lastChessNo = 0
 
 # 打开摄像头
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0)#"rtsp://192.168.24.246/stream0")
 while(cap.isOpened()): #循环读取每一帧0
     ret, img = cap.read()
     if not(ret):
@@ -92,10 +93,10 @@ while(cap.isOpened()): #循环读取每一帧0
                 lastChessNo = frameNo
 
             # 检验N个棋盘后进行相机校准，可修改这个值进行
-            if len(objpoints) > 1:
-                print('objpoints', objpoints)
-                print('imgpoints', imgpoints)
-                ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1],None,None)
+            if len(objpoints) > 0:
+                #print('objpoints', objpoints)
+                #print('imgpoints', imgpoints)
+                ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1], None,None, None, None, flag)
                 if ret:
                     calibrate = ret
                     print('mtx', mtx)
