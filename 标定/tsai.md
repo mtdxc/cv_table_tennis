@@ -30,16 +30,16 @@ $$
 其中 $A = \begin{bmatrix} x_w y_d & y_w y_d & z_w y_d & y_d & - x_w x_d & - y_w x_d & - z_w x_d \end{bmatrix}$ 已知，
 $B = \begin{bmatrix} r_1 / t_y & r_2/t_y & r_3/t_y & t_x/t_y & r_4/t_y & r_5/t_y & r_6/t_y \end{bmatrix} ^T$ 待求
 
-已知 7 个 以上标注点的世界坐标和像平面坐标，可求得 7 个分量
+已知 N >= 7 个 标定点的世界坐标和像平面坐标，可得出 7 个分量
 
 ----
 ## 改进
-为进一步简化运行，选取共面的标注板上的点作为标注点，选择世界坐标系的Z原点为标注版，即$z_w=0$,
+为进一步简化运行，选取共面的标定板上的点作为标定点，选择世界坐标系的Z原点为标定版，即$z_w=0$,
 得到 $A^’ B^’ = x_d$
 其中 $A^’ = \begin{bmatrix} x_w y_d & y_w y_d & y_d & - x_w x_d & - y_w x_d \end{bmatrix}$
 $B^’ = \begin{bmatrix} r_1 / t_y & r_2/t_y & t_x/t_y & r_4/t_y & r_5/t_y \end{bmatrix} ^T$
 需要特征点数 N >=5， House holder变化求解线性最小二乘解，得出5个分量
-$ r_1^’ = r_1 / t_y, r_2^’ = r_2 / t_y, r_3^’ = t_x / t_y, r_4^’ = r_4 / t_y, r_5^’ = r_5 / t_y $
+$ r_1^’ = r_1 / t_y, r_2^’ = r_2 / t_y, t_x^’ = t_x / t_y, r_4^’ = r_4 / t_y, r_5^’ = r_5 / t_y $
 
 故旋转矩阵 $R = 
 \begin{bmatrix} 
@@ -69,7 +69,7 @@ t_y^2 = \frac{s_r - \sqrt{s_r^2 - 4 (r_1^’ r_5^’ - r_2^’ r_4^’)^2}}{2 (r
 $$ 
 => $
 |t_y|的值, x_c x_d 同号，y_c y_d同号，假设 t_y为正, \\
-得到 r_1 = r_1^’ t_y, r_2 = r_2^’ t_y, t_x = r_3^’ t_y, r_4 = r_4^’ t_y, r_5 = r_5^’ t_y \\
+得到 r_1 = r_1^’ t_y, r_2 = r_2^’ t_y, t_x = t_x^’ t_y, r_4 = r_4^’ t_y, r_5 = r_5^’ t_y \\
 任选一点 P_n(x_{wn}, y_{wn}, 0), 其摄像机坐标为 (x_{cn}, y_{cn}, z_{cn}), 像素坐标为 (x_{dn}, y_{dn})，有 \\
 x_{cn} = r_1 x_{wn} + r_2 y_{wn} + t_x \\
 y_{cn} = r_4 x_{wn} + r_5 y_{wn} + t_y \\
